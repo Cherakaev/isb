@@ -1,42 +1,19 @@
-import json
-import random
+from Parser import get_arguments
+
+from Vigenere import encrypt_text, read_json, write_to_file
 
 
-with open('data.json', 'r', encoding='utf-8') as f:
-    data = json.load(f)
+def main():
+    try:
+        args = get_arguments()
+        key, alphabet, text_to_encrypt = read_json(args.data_json)
+        write_to_file("text_to_encrypt.txt", text_to_encrypt)
+        write_to_file("key.txt", key)
+        encrypted_text = encrypt_text(text_to_encrypt, key, alphabet)
+        write_to_file("encrypted_text.txt", encrypted_text)
+    except Exception as exc:
+        print(f"Error: {exc}")
 
 
-key = data['key']
-alphabet = data['alphabet']
-text_to_encrypt = data['text_to_encrypt']
-
-
-def encrypt_text(text: str, key: str, alphabet: str) -> str:
-    """
-    Function uses vigenere cipher
-    :param text: text to encrypt
-    :param key: key for cipher
-    :param alphabet: alphabet for text
-    :return: encrypted text
-    """
-
-    for char in key:
-        if char not in alphabet:
-            raise ValueError(f"Некорректный ключ. Недопустимый символ: '{char}'")
-
-    text = text.upper()
-    key = key.upper()
-    key_length = len(key)
-    alphabet_length = len(alphabet)
-    encrypted_text = ""
-
-    for char, index in enumerate(text):
-        if char in alphabet:
-            key_char = key[index % key_length]
-            char_shift = alphabet.find(char)
-            key_shift = alphabet.find(key_char)
-            new_index = (char_shift + key_shift) % alphabet_length
-            encrypted_text += alphabet[new_index]
-        else:
-            encrypt_text += char
-    return encrypted_text
+if __name__ == "__main__":
+    main()
