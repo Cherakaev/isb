@@ -1,6 +1,6 @@
-from Parser import get_arguments
+from parser import get_arguments
 
-from Vigenere import encrypt_text, read_json, write_to_file
+from vigenere import encrypt_text, read_json, write_to_file
 
 
 def main():

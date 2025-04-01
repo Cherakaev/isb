@@ -1,6 +1,6 @@
-from Decryption import decrypt_text, make_key
+from decryption import decrypt_text, make_key
 from file_work import read_encrypted_text, read_json, write_to_file
-from Parser import get_arguments
+from parser import get_arguments
 
 
 def main():
