@@ -1,0 +1,13 @@
+Test results:
+
+1. Bit frequency test:
+   C++: 0.595883
+   Java: 0.077100
+
+2. Test for identical consecutive bits:
+   C++: 0.839854
+   Java: 0.324488
+
+3. Longest sequence of ones in a block test:
+   C++: 0.013985
+   Java: 0.018590
