@@ -97,14 +97,15 @@ def long_sequence_test(sequence: str, probabilities: list[float], block_size: in
             else:
                 current_len = 0
 
-        if max_len <= 1:
-            max_lengths[0] += 1
-        elif max_len == 2:
-            max_lengths[1] += 1
-        elif max_len == 3:
-            max_lengths[2] += 1
-        elif max_len >= 4:
-            max_lengths[3] += 1
+        match max_len:
+            case 0 | 1:
+                max_lengths[0] += 1
+            case 2:
+                max_lengths[1] += 1
+            case 3:
+                max_lengths[2] += 1
+            case _:
+                max_lengths[3] += 1
 
     chi_square = sum((max_lengths[i] - num_blocks * probabilities[i]) ** 2 /
                      num_blocks * probabilities[i] for i in range (4))
