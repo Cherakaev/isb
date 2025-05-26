@@ -82,7 +82,7 @@ class FileWorker:
         """
         if not private_key:
             raise ValueError("Key is not provided")
-        try :
+        try:
             with open(private_key_path, "wb") as f:
                 f.write(
                     private_key.private_bytes(

@@ -79,7 +79,8 @@ class HybridSystem:
         )
         decryptor = cipher.decryptor()
 
-        decrypted_padded = decryptor.update(ciphertext) + decryptor.finalize()
+        decrypted_padded = (decryptor.update(ciphertext) +
+                            decryptor.finalize())
 
         unpadder = sym_padding.PKCS7(128).unpadder()
         decrypted_data = (unpadder.update(decrypted_padded)

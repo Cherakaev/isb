@@ -9,8 +9,9 @@ from cryptography.hazmat.primitives.asymmetric.rsa import (
 
 class KeyWorker:
     @staticmethod
-    def generate_rsa_keys(key_size: int = 2048) -> tuple[RSAPublicKey,
-    RSAPrivateKey]:
+    def generate_rsa_keys(
+            key_size: int = 2048
+    ) -> tuple[RSAPublicKey, RSAPrivateKey]:
         """
         Method generates public and private rsa keys
         :param key_size: length for module in Euler function
@@ -31,14 +32,17 @@ class KeyWorker:
         :return: return key as string of bytes
         """
         if key_size not in [128, 192, 256]:
-            raise ValueError("Camellia key size must be 128, 192,"
-                             " or 256 bits")
+            raise ValueError(
+                "Camellia key size must be 128, 192, or 256 bits"
+            )
         camellia_key = get_random_bytes(key_size // 8)
         return camellia_key
 
     @staticmethod
-    def encrypt_camellia_key(symmetric_key: bytes,
-                             public_key: RSAPublicKey) -> bytes:
+    def encrypt_camellia_key(
+            symmetric_key: bytes,
+            public_key: RSAPublicKey
+    ) -> bytes:
         """
         Method encrypt symmetric key by using public key
         :param symmetric_key: symmetric key to encrypt

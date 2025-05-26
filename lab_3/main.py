@@ -8,18 +8,21 @@ from hybrid_system import HybridSystem
 
 def parse_arguments() -> argparse.Namespace:
     """
-
-    :return: 
+    Function parses arguments from cmd
+    :return: object with arguments
     """
     parser = argparse.ArgumentParser(
-        description = "Hybrid crypto system (RSA + Camillia)",
+        description="Hybrid crypto system (RSA + Camillia)",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     group = parser.add_mutually_exclusive_group(required = True)
 
-    group.add_argument('-gen', '--generate', action='store_true', help='Generate keys')
-    group.add_argument('-enc', '--encrypt', action='store_true', help='Encrypt file')
-    group.add_argument('-dec', '--decrypt', action='store_true', help='Decrypt file')
+    group.add_argument('-gen', '--generate', action='store_true',
+                       help='Generate keys')
+    group.add_argument('-enc', '--encrypt', action='store_true',
+                       help='Encrypt file')
+    group.add_argument('-dec', '--decrypt', action='store_true',
+                       help='Decrypt file')
 
     parser.add_argument(
         '-c', '--config',
@@ -47,11 +50,22 @@ def main() :
             print("Keys generation..")
 
             public_key, private_key = KeyWorker.generate_rsa_keys()
-            symmetric_key = KeyWorker.generate_camellia_key(args.key_length)
-            encrypted_key = KeyWorker.encrypt_camellia_key(symmetric_key, public_key)
+            symmetric_key = KeyWorker.generate_camellia_key(
+                args.key_length
+            )
+            encrypted_key = KeyWorker.encrypt_camellia_key(
+                symmetric_key,
+                public_key
+            )
 
-            FileWorker.serialize_private_key(private_key, settings["private_key"])
-            FileWorker.serialize_public_key(public_key, settings["public_key"])
+            FileWorker.serialize_private_key(
+                private_key,
+                settings["private_key"]
+            )
+            FileWorker.serialize_public_key(
+                public_key,
+                settings["public_key"]
+            )
             FileWorker.write_txt(settings["symmetric_key"], encrypted_key)
 
             print("Keys have successfully saved")
@@ -69,7 +83,7 @@ def main() :
                 settings["encrypted_file"]
             )
 
-            print(f"Data saved to {settings["encrypted_file"]}")
+            print(f"Data saved to {settings['encrypted_file']}")
         else:
             print("Decryption..")
 
@@ -84,7 +98,7 @@ def main() :
                 settings["decrypted_file"]
             )
 
-            print(f"Data saved to {settings["decrypted_file"]}")
+            print(f"Data saved to {settings['decrypted_file']}")
     except Exception as e:
         print(f"Error: {str(e)}", file=sys.stderr)
         sys.exit(1)
