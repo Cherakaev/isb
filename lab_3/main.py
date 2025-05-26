@@ -40,65 +40,80 @@ def parse_arguments() -> argparse.Namespace:
 
     return parser.parse_args()
 
+
+def get_mode(args: argparse.Namespace) -> str:
+    if args.generate:
+        return "generate"
+    elif args.encrypt:
+        return "encrypt"
+    elif args.decrypt:
+        return "decrypt"
+    else:
+        raise ValueError("Undefined mode")
+
+
 def main() :
     args = parse_arguments()
+    mode = get_mode(args)
 
     try:
         settings = FileWorker.read_json(args.config)
 
-        if args.generate:
-            print("Keys generation..")
+        match mode:
 
-            public_key, private_key = KeyWorker.generate_rsa_keys()
-            symmetric_key = KeyWorker.generate_camellia_key(
-                args.key_length
-            )
-            encrypted_key = KeyWorker.encrypt_camellia_key(
-                symmetric_key,
-                public_key
-            )
+            case "generate":
+                print("Keys generation..")
 
-            FileWorker.serialize_private_key(
-                private_key,
-                settings["private_key"]
-            )
-            FileWorker.serialize_public_key(
-                public_key,
-                settings["public_key"]
-            )
-            FileWorker.write_txt(settings["symmetric_key"], encrypted_key)
+                public_key, private_key = KeyWorker.generate_rsa_keys()
+                symmetric_key = KeyWorker.generate_camellia_key(
+                    args.key_length
+                )
+                encrypted_key = KeyWorker.encrypt_camellia_key(
+                    symmetric_key,
+                    public_key
+                )
 
-            print("Keys have successfully saved")
-        elif args.encrypt:
-            print("Encryption..")
+                FileWorker.serialize_private_key(
+                    private_key,
+                    settings["private_key"]
+                )
+                FileWorker.serialize_public_key(
+                    public_key,
+                    settings["public_key"]
+                )
+                FileWorker.write_txt(settings["symmetric_key"], encrypted_key)
 
-            symmetric_key = HybridSystem.decrypt_symmetric_key(
-                settings["symmetric_key"],
-                settings["private_key"]
-            )
+                print("Keys have successfully saved")
+            case "encrypt":
+                print("Encryption..")
 
-            HybridSystem.encrypt_file(
-                settings["initial_file"],
-                symmetric_key,
-                settings["encrypted_file"]
-            )
+                symmetric_key = HybridSystem.decrypt_symmetric_key(
+                    settings["symmetric_key"],
+                    settings["private_key"]
+                )
 
-            print(f"Data saved to {settings['encrypted_file']}")
-        else:
-            print("Decryption..")
+                HybridSystem.encrypt_file(
+                    settings["initial_file"],
+                    symmetric_key,
+                    settings["encrypted_file"]
+                )
 
-            symmetric_key = HybridSystem.decrypt_symmetric_key(
-                settings["symmetric_key"],
-                settings["private_key"]
-            )
+                print(f"Data saved to {settings['encrypted_file']}")
+            case "decrypt":
+                print("Decryption..")
 
-            HybridSystem.decrypt_file(
-                settings["encrypted_file"],
-                symmetric_key,
-                settings["decrypted_file"]
-            )
+                symmetric_key = HybridSystem.decrypt_symmetric_key(
+                    settings["symmetric_key"],
+                    settings["private_key"]
+                )
 
-            print(f"Data saved to {settings['decrypted_file']}")
+                HybridSystem.decrypt_file(
+                    settings["encrypted_file"],
+                    symmetric_key,
+                    settings["decrypted_file"]
+                )
+
+                print(f"Data saved to {settings['decrypted_file']}")
     except Exception as e:
         print(f"Error: {str(e)}", file=sys.stderr)
         sys.exit(1)
