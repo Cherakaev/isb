@@ -1,7 +1,10 @@
 from Crypto.Random import get_random_bytes
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
-from cryptography.hazmat.primitives import serialization, hashes
-from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey, RSAPrivateKey
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric.rsa import (
+    RSAPublicKey,
+    RSAPrivateKey
+)
 
 
 class KeyWorker:
@@ -34,7 +37,8 @@ class KeyWorker:
         return camellia_key
 
     @staticmethod
-    def encrypt_camellia_key(symmetric_key: bytes, public_key: RSAPublicKey) -> bytes:
+    def encrypt_camellia_key(symmetric_key: bytes,
+                             public_key: RSAPublicKey) -> bytes:
         """
         Method encrypt symmetric key by using public key
         :param symmetric_key: symmetric key to encrypt
@@ -53,44 +57,3 @@ class KeyWorker:
             )
         )
         return encrypted_key
-
-    @staticmethod
-    def serialize_public_key(public_key: RSAPublicKey,
-                           public_key_path: str) -> None:
-        """
-        Method serialize rsa public key to .pem file
-        :param public_key: key to serialize
-        :param public_key_path: path to file to save key
-        :return: None
-        """
-        if not public_key:
-            raise ValueError("Keys are not provided")
-
-        with open(public_key_path, "wb") as f:
-            f.write(
-                public_key.public_bytes(
-                    encoding=serialization.Encoding.PEM,
-                    format=serialization.PublicFormat.SubjectPublicKeyInfo,
-                )
-            )
-
-    @staticmethod
-    def serialize_private_key(private_key: RSAPrivateKey,
-                              private_key_path: str) -> None:
-        """
-        Method serialize rsa private key to .pem file
-        :param private_key: key to serialize
-        :param private_key_path: path to file to save key
-        :return: None
-        """
-        if not private_key:
-            raise ValueError("Key is not provided")
-
-        with open(private_key_path, "wb") as f:
-            f.write(
-                private_key.private_bytes(
-                    encoding=serialization.Encoding.PEM,
-                    format=serialization.PrivateFormat.PKCS8,
-                    encryption_algorithm=serialization.NoEncryption(),
-                )
-            )
